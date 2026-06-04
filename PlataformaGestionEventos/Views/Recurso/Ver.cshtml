@@ -1,0 +1,64 @@
+@model ProyectoReservaciones.Models.Recurso
+@{
+    ViewData["Title"] = "Detalle del Recurso";
+}
+<style>
+    .custom-dashboard { font-family: 'Poppins', sans-serif; background-color: #21212b; color: #b5b5be; border-radius: 16px; padding: 2.5rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); max-width: 600px; margin: 0 auto; }
+    .custom-title { font-weight: 600; color: #ffffff; font-size: 1.75rem; }
+    .custom-hr { border-top: 1px solid #2d2d3d; opacity: 1; margin: 1.5rem 0; }
+    .custom-label { color: #7e7e8f; font-weight: 500; font-size: 0.9rem; }
+    .custom-value { color: #ffffff; font-size: 0.95rem; margin-bottom: 1rem; }
+    .custom-badge { padding: 4px 12px; border-radius: 8px; font-weight: 500; font-size: 0.85rem; display: inline-block; }
+    .badge-yes { background-color: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); }
+    .badge-no { background-color: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3); }
+    .custom-list { padding-left: 1.25rem; margin: 0; color: #ffffff; }
+    .custom-list li { margin-bottom: 4px; }
+    .btn-custom-edit { background: linear-gradient(135deg, #ff527b, #ff715b); color: white; border: none; padding: 12px 30px; border-radius: 20px; font-weight: 500; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-custom-edit:hover { background: linear-gradient(135deg, #ff715b, #ff527b); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 82, 123, 0.4); }
+    .btn-custom-back { background: transparent; border: 1px solid #2d2d3d; color: #7e7e8f; padding: 12px 30px; border-radius: 20px; font-weight: 500; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-custom-back:hover { border-color: #5c5c70; color: #ffffff; }
+</style>
+<div class="custom-dashboard">
+    <h1 class="custom-title m-0 text-center">Detalle del Recurso</h1>
+    <div class="custom-hr"></div>
+    <div class="row px-2">
+        <div class="col-sm-4 custom-label">Nombre</div>
+        <div class="col-sm-8 custom-value">@Model.Nombre</div>
+        <div class="col-sm-4 custom-label">Tipo</div>
+        <div class="col-sm-8 custom-value">@Model.Tipo</div>
+        <div class="col-sm-4 custom-label">Cantidad</div>
+        <div class="col-sm-8 custom-value">@Model.cantidad</div>
+        <div class="col-sm-4 custom-label">Disponible</div>
+        <div class="col-sm-8 custom-value">
+            @if (Model.Disponible)
+            {
+                <span class="custom-badge badge-yes">Sí</span>
+            }
+            else
+            {
+                <span class="custom-badge badge-no">No</span>
+            }
+        </div>
+        <div class="col-sm-4 custom-label">Eventos Asociados</div>
+        <div class="col-sm-8 custom-value">
+            @if (Model.RecursosEvento != null && Model.RecursosEvento.Any())
+            {
+                <ul class="custom-list">
+                    @foreach (var item in Model.RecursosEvento)
+                    {
+                        <li>@item.Evento?.Nombre</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted small">No hay eventos asociados.</span>
+            }
+        </div>
+    </div>
+    <div class="custom-hr"></div>
+    <div class="d-flex justify-content-between align-items-center pt-2">
+        <a asp-action="Index" class="btn-custom-back">Volver</a>
+        <a asp-action="Editar" asp-route-id="@Model.RecursoId" class="btn-custom-edit">Editar</a>
+    </div>
+</div>
