@@ -1,0 +1,101 @@
+@model PlataformaGestionEventos.Models.Evento
+@{
+    ViewData["Title"] = "Editar Evento";
+}
+<style>
+    .custom-dashboard { font-family: 'Poppins', sans-serif; background-color: #21212b; color: #b5b5be; border-radius: 16px; padding: 2.5rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); max-width: 700px; margin: 0 auto; }
+    .custom-title { font-weight: 600; color: #ffffff; font-size: 1.75rem; }
+    .custom-subtitle { font-weight: 500; color: #ffffff; font-size: 1.25rem; margin-top: 1.5rem; }
+    .custom-hr { border-top: 1px solid #2d2d3d; opacity: 1; margin: 1.5rem 0; }
+    .custom-label { color: #7e7e8f; font-weight: 500; font-size: 0.9rem; margin-bottom: 8px; }
+    .custom-control { background-color: #262633; border: 1px solid #2d2d3d; color: #ffffff; border-radius: 10px; padding: 12px 16px; font-size: 0.95rem; transition: all 0.2s ease; }
+    .custom-control:focus { background-color: #262633; border-color: #ff527b; color: #ffffff; box-shadow: 0 0 0 3px rgba(255, 82, 123, 0.15); }
+    textarea.custom-control { min-height: 100px; resize: vertical; }
+    select.custom-control { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%237e7e8f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 16px 12px; padding-right: 2.5rem; }
+    select.custom-control option { background-color: #21212b; color: #ffffff; }
+    input[type="datetime-local"].custom-control::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.5; }
+    .custom-table { border-color: #2d2d3d; color: #b5b5be; }
+    .custom-table thead th { background-color: #262633; color: #ffffff; border-color: #2d2d3d; font-weight: 500; font-size: 0.9rem; }
+    .custom-table tbody td { border-color: #2d2d3d; vertical-align: middle; background-color: transparent; }
+    .custom-checkbox { background-color: #262633; border: 1px solid #2d2d3d; width: 1.2rem; height: 1.2rem; border-radius: 4px; }
+    .custom-checkbox:checked { background-color: #ff527b; border-color: #ff527b; }
+    .table-input { padding: 6px 12px; font-size: 0.9rem; border-radius: 6px; }
+    .btn-custom-save { background: linear-gradient(135deg, #ff527b, #ff715b); color: white; border: none; padding: 12px 30px; border-radius: 20px; font-weight: 500; transition: all 0.3s ease; }
+    .btn-custom-save:hover { background: linear-gradient(135deg, #ff715b, #ff527b); color: white; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 82, 123, 0.4); }
+    .btn-custom-back { background: transparent; border: 1px solid #2d2d3d; color: #7e7e8f; padding: 12px 30px; border-radius: 20px; font-weight: 500; transition: all 0.2s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    .btn-custom-back:hover { border-color: #5c5c70; color: #ffffff; }
+</style>
+<div class="custom-dashboard">
+    <h1 class="custom-title m-0 text-center">Editar Evento</h1>
+    <div class="custom-hr"></div>
+    <form asp-action="Editar" method="POST">
+        <input type="hidden" asp-for="EventoId"/>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div class="mb-4">
+            <label asp-for="Nombre" class="form-label custom-label">Nombre</label>
+            <input asp-for="Nombre" class="form-control custom-control"/>
+            <span asp-validation-for="Nombre" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="Descripcion" class="form-label custom-label">Descripción</label>
+            <textarea asp-for="Descripcion" class="form-control custom-control"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="FechaInicio" class="form-label custom-label">Fecha Inicio</label>
+            <input asp-for="FechaInicio" type="datetime-local" class="form-control custom-control"/>
+            <span asp-validation-for="FechaInicio" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="FechaFin" class="form-label custom-label">Fecha Fin</label>
+            <input asp-for="FechaFin" type="datetime-local" class="form-control custom-control"/>
+            <span asp-validation-for="FechaFin" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="CapacidadMaxima" class="form-label custom-label">Capacidad Máxima</label>
+            <input asp-for="CapacidadMaxima" class="form-control custom-control"/>
+            <span asp-validation-for="CapacidadMaxima" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="SalaId" class="form-label custom-label">Sala</label>
+            <select asp-for="SalaId" asp-items="ViewBag.SalaId" class="form-control custom-control">
+                <option value="">Seleccione una sala</option>
+            </select>
+            <span asp-validation-for="SalaId" class="text-danger small mt-1 d-block"></span>
+        </div>
+        <div class="custom-hr"></div>
+        <h4 class="custom-subtitle mb-3">Recursos</h4>
+        <table class="table table-bordered custom-table">
+            <thead>
+                <tr>
+                    <th class="text-center">Seleccionar</th>
+                    <th>Recurso</th>
+                    <th>Disponible</th>
+                    <th>Cantidad a usar</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for (int i = 0; i < Model.RecursosSeleccionados.Count; i++)
+            {
+                <tr>
+                    <td class="text-center">
+                        <input asp-for="RecursosSeleccionados[i].Seleccionado" class="form-check-input custom-checkbox m-0"/>
+                        <input type="hidden" asp-for="RecursosSeleccionados[i].RecursoId"/>
+                        <input type="hidden" asp-for="RecursosSeleccionados[i].Nombre"/>
+                        <input type="hidden" asp-for="RecursosSeleccionados[i].CantidadDisponible"/>
+                    </td>
+                    <td>@Model.RecursosSeleccionados[i].Nombre</td>
+                    <td>@Model.RecursosSeleccionados[i].CantidadDisponible</td>
+                    <td>
+                        <input asp-for="RecursosSeleccionados[i].CantidadSeleccionada" class="form-control custom-control table-input" min="0"/>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-between align-items-center pt-3">
+            <a asp-action="Index" class="btn-custom-back">Volver</a>
+            <button type="submit" class="btn-custom-save">Guardar Cambios</button>
+        </div>
+    </form>
+</div>

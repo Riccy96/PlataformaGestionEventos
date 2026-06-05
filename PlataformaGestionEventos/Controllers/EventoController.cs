@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ProyectoReservaciones.Data;
-using ProyectoReservaciones.Models;
-using ProyectoReservaciones.ViewModels;
+using PlataformaGestionEventos.Data;
+using PlataformaGestionEventos.Models;
+using PlataformaGestionEventos.ViewModels;
 
-namespace ProyectoReservaciones.Controllers;
+namespace PlataformaGestionEventos.Controllers;
 
 public class EventoController : Controller
 {

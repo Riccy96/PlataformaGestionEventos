@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ProyectoReservaciones.ViewModels;
+using PlataformaGestionEventos.ViewModels;
 
-namespace ProyectoReservaciones.Models;
+namespace PlataformaGestionEventos.Models;
 
 public class Evento
 {
