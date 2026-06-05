@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ProyectoReservaciones.Models;
+namespace PlataformaGestionEventos.Models;
 
 public class Inscripcion
 {

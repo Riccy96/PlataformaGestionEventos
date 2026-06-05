@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using PlataformaGestionEventos.ViewModels;
+using PlataformaGestionEventos.Models;
 
 namespace PlataformaGestionEventos.Models;
 

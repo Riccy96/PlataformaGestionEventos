@@ -1,4 +1,4 @@
-namespace ProyectoReservaciones.Models;
+namespace PlataformaGestionEventos.Models;
 
 using System.ComponentModel.DataAnnotations;
 

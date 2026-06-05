@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PlataformaGestionEventos.Data;
 using PlataformaGestionEventos.Models;
 using PlataformaGestionEventos.ViewModels;
+using PlataformaGestionEventos.ViewModels;
 
 namespace PlataformaGestionEventos.Controllers;
 

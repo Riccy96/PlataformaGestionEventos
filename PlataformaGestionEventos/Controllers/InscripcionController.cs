@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ProyectoReservaciones.Data;
-using ProyectoReservaciones.Models;
+using PlataformaGestionEventos.Data;
+using PlataformaGestionEventos.Models;
 
-namespace ProyectoReservaciones.Controllers;
+namespace PlataformaGestionEventos.Controllers;
 
 public class InscripcionController : Controller
 {

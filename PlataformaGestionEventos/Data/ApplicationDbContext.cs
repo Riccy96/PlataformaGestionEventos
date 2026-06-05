@@ -7,7 +7,6 @@ namespace PlataformaGestionEventos.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
 {
     public DbSet<Sala> Salas { get; set; }
-    /*
     public DbSet<Evento> Eventos { get; set; }
     public DbSet<Asistente> Asistentes { get; set; }
     public DbSet<Inscripcion> Inscripciones { get; set; }
@@ -21,5 +20,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.Entity<RecursoEvento>()
             .HasKey(re => new { re.EventoId, re.RecursoId });
     }
-    */
 }

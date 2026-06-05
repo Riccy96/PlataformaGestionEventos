@@ -1,4 +1,4 @@
-namespace ProyectoReservaciones.ViewModels;
+namespace PlataformaGestionEventos.ViewModels;
 
 public class EventoRecursoViewModel
 {
