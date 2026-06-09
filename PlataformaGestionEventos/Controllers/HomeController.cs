@@ -1,24 +1,38 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PlataformaGestionEventos.Data;
 using PlataformaGestionEventos.Models;
 
 namespace PlataformaGestionEventos.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ApplicationDbContext context)
     {
-        return View();
+        _context = context;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        ViewBag.TotalSalas = await _context.Salas.CountAsync();
+        ViewBag.TotalEventos = await _context.Eventos.CountAsync();
+        ViewBag.TotalAsistentes = await _context.Asistentes.CountAsync();
+        ViewBag.TotalInscripciones = await _context.Inscripciones.CountAsync();
+        ViewBag.TotalRecursos = await _context.Recursos.CountAsync();
+
+        var ultimosEventos = await _context.Eventos
+            .OrderByDescending(e => e.EventoId) 
+            .Take(3)
+            .ToListAsync();
+
+        return View(ultimosEventos);
     }
 
     public IActionResult Privacy()
     {
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
