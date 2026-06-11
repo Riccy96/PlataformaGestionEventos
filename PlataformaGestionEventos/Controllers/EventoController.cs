@@ -147,34 +147,99 @@ public class EventoController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Editar(int id, Evento evento)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Editar(int id, Evento evento)
+{
+    if (id != evento.EventoId)
     {
-        if (id != evento.EventoId)
-        {
-            return NotFound();
-        }
-        if (ModelState.IsValid)
-        {
-            bool conflicto = await _context.Eventos.AnyAsync(e =>
-                e.EventoId != evento.EventoId &&
-                e.SalaId == evento.SalaId &&
-                evento.FechaInicio < e.FechaFin &&
-                evento.FechaFin > e.FechaInicio);
-            if (conflicto)
-            {
-                ModelState.AddModelError("", "La sala ya está reservada en ese horario.");
-            }
-            else
-            {
-                _context.Update(evento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-        }
-        ViewBag.SalaId = new SelectList(_context.Salas, "SalaId", "nombre", evento.SalaId);
-        return View(evento);
+        return NotFound();
     }
+    if (ModelState.IsValid)
+    {
+        bool conflicto = await _context.Eventos.AnyAsync(e =>
+            e.EventoId != evento.EventoId &&
+            e.SalaId == evento.SalaId &&
+            evento.FechaInicio < e.FechaFin &&
+            evento.FechaFin > e.FechaInicio);
+        if (conflicto)
+        {
+            ModelState.AddModelError("", "La sala ya está reservada en ese horario.");
+        }
+        else
+        {
+            var recursosViejos = await _context.RecursoEvento
+                .Where(re => re.EventoId == evento.EventoId)
+                .ToListAsync();
+            foreach (var antiguo in recursosViejos)
+            {
+                var recursoDb = await _context.Recursos.FindAsync(antiguo.RecursoId);
+                if (recursoDb != null)
+                {
+                    recursoDb.cantidad += antiguo.cantidad;
+                    recursoDb.Disponible = true;
+                }
+            }
+            _context.RecursoEvento.RemoveRange(recursosViejos);
+            await _context.SaveChangesAsync();
+            bool errorStock = false;
+            foreach (var recurso in evento.RecursosSeleccionados.Where(r => r.Seleccionado))
+            {
+                var recursoDb = await _context.Recursos.FindAsync(recurso.RecursoId);
+                if (recursoDb == null || recurso.CantidadSeleccionada > recursoDb.cantidad)
+                {
+                    ModelState.AddModelError("", $"No hay suficiente cantidad para {recursoDb?.Nombre ?? "el recurso"}. Disponible real: {recursoDb?.cantidad}");
+                    errorStock = true;
+                    break;
+                }
+            }
+            if (errorStock)
+            {
+                return await RecargarVistaEditar(evento);
+            }
+            _context.Update(evento);
+            foreach (var recurso in evento.RecursosSeleccionados.Where(r => r.Seleccionado))
+            {
+                _context.RecursoEvento.Add(new RecursoEvento
+                {
+                    EventoId = evento.EventoId,
+                    RecursoId = recurso.RecursoId,
+                    cantidad = recurso.CantidadSeleccionada
+                });
+                var recursoDb = await _context.Recursos.FindAsync(recurso.RecursoId);
+                if (recursoDb != null)
+                {
+                    recursoDb.cantidad -= recurso.CantidadSeleccionada;
+                    if (recursoDb.cantidad <= 0)
+                    {
+                        recursoDb.Disponible = false;
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+    }
+    return await RecargarVistaEditar(evento);
+}
+private async Task<IActionResult> RecargarVistaEditar(Evento evento)
+{
+    ViewBag.SalaId = new SelectList(_context.Salas, "SalaId", "nombre", evento.SalaId);
+    var recursos = await _context.Recursos.ToListAsync();
+    evento.RecursosSeleccionados ??= new List<EventoRecursoViewModel>();
+    foreach (var r in recursos)
+    {
+        if (!evento.RecursosSeleccionados.Any(x => x.RecursoId == r.RecursoId))
+        {
+            evento.RecursosSeleccionados.Add(new EventoRecursoViewModel
+            {
+                RecursoId = r.RecursoId,
+                Nombre = r.Nombre,
+                CantidadDisponible = r.cantidad
+            });
+        }
+    }
+    return View(evento);
+}
 
     [HttpGet]
     public async Task<IActionResult> Ver(int? id)
@@ -236,6 +301,30 @@ public class EventoController : Controller
             }
             _context.RecursoEvento.RemoveRange(evento.RecursosEvento);
             _context.Eventos.Remove(evento);
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DevolverRecursos(int id)
+    {
+        var recursosEvento = await _context.RecursoEvento
+            .Where(re => re.EventoId == id)
+            .ToListAsync();
+        if (recursosEvento.Any())
+        {
+            foreach (var re in recursosEvento)
+            {
+                var recursoDb = await _context.Recursos.FindAsync(re.RecursoId);
+                if (recursoDb != null)
+                {
+                    recursoDb.cantidad += re.cantidad;
+                    recursoDb.Disponible = true;
+                }
+            }
+            _context.RecursoEvento.RemoveRange(recursosEvento);
             await _context.SaveChangesAsync();
         }
         return RedirectToAction(nameof(Index));

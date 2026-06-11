@@ -156,11 +156,9 @@ namespace PlataformaGestionEventos.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -198,11 +196,9 @@ namespace PlataformaGestionEventos.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -221,11 +217,6 @@ namespace PlataformaGestionEventos.Data.Migrations
 
                     b.Property<string>("Correo")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Identidad")
-                        .IsRequired()
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Nombre")

@@ -18,11 +18,12 @@ ViewData["Title"] = "Lista de Eventos";
     .custom-table tbody td { padding: 16px; border: none; vertical-align: middle; font-size: 0.95rem; }
     .custom-table tbody tr.row-highlighted { background: linear-gradient(90deg, #624b91, #3b508a); color: #ffffff; }
     .custom-table tbody tr.row-highlighted td { color: #ffffff; }
-    .btn-action { background: transparent; border: none; color: #7e7e8f; padding: 6px 10px; font-size: 1.1rem; transition: color 0.2s; text-decoration: none; }
+    .btn-action { background: transparent; border: none; color: #7e7e8f; padding: 6px 10px; font-size: 1.1rem; transition: color 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
     .btn-action:hover { color: #ffffff; }
     .btn-action.edit:hover { color: #ffc107; }
     .btn-action.view:hover { color: #0dcaf0; }
     .btn-action.delete:hover { color: #dc3545; }
+    .btn-action.return:hover { color: #a370f7; }
     .row-highlighted .btn-action { color: #e2e2e2; }
     .row-highlighted .btn-action:hover { color: #ffffff; }
 </style>
@@ -42,7 +43,7 @@ ViewData["Title"] = "Lista de Eventos";
                 <th>Fecha Fin</th>
                 <th>Capacidad</th>
                 <th>Sala</th>
-                <th style="width: 200px; text-align: center;">Acciones</th>
+                <th style="width: 240px; text-align: center;">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -58,18 +59,26 @@ ViewData["Title"] = "Lista de Eventos";
                 <td>@evento.CapacidadMaxima</td>
                 <td>@evento.Sala?.nombre</td>
                 <td style="text-align: center; vertical-align: middle;">
-                    @if (esPrimeraFila)
-                    {
-                    <a asp-action="Editar" asp-route-id="@evento.EventoId" class="btn-action font-weight-bold" title="Editar"><i class="bi bi-check-lg"></i></a>
-                    <a asp-action="Ver" asp-route-id="@evento.EventoId" class="btn-action view" title="Ver"><i class="bi bi-eye"></i></a>
-                    <a asp-action="Eliminar" asp-route-id="@evento.EventoId" class="btn-action font-weight-bold" title="Eliminar"><i class="bi bi-x-lg"></i></a>
-                    }
-                    else
-                    {
-                    <a asp-action="Editar" asp-route-id="@evento.EventoId" class="btn-action edit" title="Editar"><i class="bi bi-pencil-fill"></i></a>
-                    <a asp-action="Ver" asp-route-id="@evento.EventoId" class="btn-action view" title="Ver"><i class="bi bi-eye"></i></a>
-                    <a asp-action="Eliminar" asp-route-id="@evento.EventoId" class="btn-action delete" title="Eliminar"><i class="bi bi-trash3-fill"></i></a>
-                    }
+                    <div class="d-flex justify-content-center align-items-center gap-1">
+                        @if (esPrimeraFila)
+                        {
+                        <a asp-action="Editar" asp-route-id="@evento.EventoId" class="btn-action font-weight-bold" title="Editar"><i class="bi bi-check-lg"></i></a>
+                        <a asp-action="Ver" asp-route-id="@evento.EventoId" class="btn-action view" title="Ver"><i class="bi bi-eye"></i></a>
+                        <form asp-action="DevolverRecursos" asp-route-id="@evento.EventoId" method="post" class="m-0" onsubmit="return confirm('¿Está seguro de devolver los recursos de este evento?');">
+                            <button type="submit" class="btn-action return" title="Devolver Recursos"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        </form>
+                        <a asp-action="Eliminar" asp-route-id="@evento.EventoId" class="btn-action font-weight-bold" title="Eliminar"><i class="bi bi-x-lg"></i></a>
+                        }
+                        else
+                        {
+                        <a asp-action="Editar" asp-route-id="@evento.EventoId" class="btn-action edit" title="Editar"><i class="bi bi-pencil-fill"></i></a>
+                        <a asp-action="Ver" asp-route-id="@evento.EventoId" class="btn-action view" title="Ver"><i class="bi bi-eye"></i></a>
+                        <form asp-action="DevolverRecursos" asp-route-id="@evento.EventoId" method="post" class="m-0" onsubmit="return confirm('¿Está seguro de devolver los recursos de este evento?');">
+                            <button type="submit" class="btn-action return" title="Devolver Recursos"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        </form>
+                        <a asp-action="Eliminar" asp-route-id="@evento.EventoId" class="btn-action delete" title="Eliminar"><i class="bi bi-trash3-fill"></i></a>
+                        }
+                    </div>
                 </td>
             </tr>
             esPrimeraFila = false;

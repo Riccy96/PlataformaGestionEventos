@@ -11,10 +11,6 @@ public class Asistente
     [StringLength(100)]
     public string Nombre { get; set; }
 
-    [Required(ErrorMessage = "Ingrese la identidad")]
-    [StringLength(20)]
-    public string Identidad { get; set; }
-
     [Required(ErrorMessage = "Ingrese el correo")]
     [EmailAddress]
     public string Correo { get; set; }
